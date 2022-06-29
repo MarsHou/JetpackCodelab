@@ -12,13 +12,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,8 +34,38 @@ class ComposeLayoutActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             JetpackLearnTheme {
-                PhotographerCard()
+                LayoutsCodelab()
             }
+        }
+    }
+
+
+    @Composable
+    fun LayoutsCodelab() {
+        Scaffold(topBar = {
+            TopAppBar(title = {
+                Text(text = "LayoutsCodelab")
+            }, actions = {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(imageVector = Icons.Filled.Favorite, contentDescription = null)
+                }
+            })
+        }, bottomBar = {
+            BottomNavigation() {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+                }
+            }
+        }) {
+            BodyContent(Modifier.padding(it))
+        }
+    }
+
+    @Composable
+    fun BodyContent(modifier: Modifier = Modifier) {
+        Column(modifier = modifier.padding(8.dp)) {
+            Text(text = "Hi there!")
+            Text(text = "Thanks for going through the Layouts codelab")
         }
     }
 
@@ -70,7 +101,7 @@ class ComposeLayoutActivity : ComponentActivity() {
     @Composable
     fun PhotographerCardPreview() {
         JetpackLearnTheme {
-            PhotographerCard()
+            LayoutsCodelab()
         }
     }
 }
