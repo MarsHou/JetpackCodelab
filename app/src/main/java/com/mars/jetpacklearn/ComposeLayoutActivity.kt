@@ -3,9 +3,7 @@ package com.mars.jetpacklearn
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -21,6 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.AlignmentLine
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.layout.Layout
@@ -42,10 +41,89 @@ class ComposeLayoutActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             JetpackLearnTheme {
-                MyBodyContent()
+                ChipBodyContent()
             }
         }
     }
+
+    private val topics = listOf(
+        "Arts & Crafts", "Beauty", "Books", "Business", "Comics", "Culinary",
+        "Design", "Fashion", "Film", "History", "Maths", "Music", "People", "Philosophy",
+        "Religion", "Social sciences", "Technology", "TV", "Writing"
+    )
+
+
+    @Composable
+    fun ChipBodyContent(modifier: Modifier = Modifier) {
+        val state = rememberScrollState()
+        Row(modifier = modifier.horizontalScroll(state)) {
+            StaggeredGrid(rows = 5) {
+                topics.forEach {
+                    Chip(modifier = Modifier.padding(8.dp), text = it)
+                }
+            }
+        }
+
+    }
+
+
+    @Composable
+    fun Chip(modifier: Modifier = Modifier, text: String) {
+        Card(
+            modifier = modifier,
+            border = BorderStroke(color = Color.Black, width = Dp.Hairline),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Row(
+                modifier = Modifier.padding(start = 8.dp, top = 4.dp, end = 8.dp, bottom = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(16.dp, 16.dp)
+                        .background(color = MaterialTheme.colors.secondary)
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(text = text)
+            }
+        }
+    }
+
+    @Composable
+    fun StaggeredGrid(modifier: Modifier = Modifier, rows: Int, content: @Composable () -> Unit) {
+        Layout(modifier = modifier, content = content) { measurables, constrains ->
+            val rowsWidths = IntArray(rows) { 0 }
+            val rowsHeights = IntArray(rows) { 0 }
+            val placeables = measurables.mapIndexed { index, measurable ->
+                val placeable = measurable.measure(constrains)
+                val row = index % rows
+                rowsWidths[row] += placeable.width
+                rowsHeights[row] = rowsHeights[row].coerceAtLeast(placeable.height)
+                placeable
+            }
+
+            val width =
+                rowsWidths.maxOrNull()?.coerceIn(constrains.minWidth.rangeTo(constrains.maxWidth))
+                    ?: constrains.minWidth
+            val height =
+                rowsHeights.sum().coerceIn(constrains.minHeight.rangeTo(constrains.maxHeight))
+
+            val rowY = IntArray(rows) { 0 }
+            for (i in 1 until rows) {
+                rowY[i] = rowY[i - 1] + rowsHeights[i - 1]
+            }
+            layout(width, height) {
+
+                val rowX = IntArray(rows) { 0 }
+                placeables.forEachIndexed { index, placeable ->
+                    val row = index % rows
+                    placeable.placeRelative(rowX[row], rowY[row])
+                    rowX[row] += placeable.width
+                }
+            }
+        }
+    }
+
 
     @Composable
     fun MyBodyContent(modifier: Modifier = Modifier) {
@@ -195,7 +273,7 @@ class ComposeLayoutActivity : ComponentActivity() {
     @Composable
     fun PhotographerCardPreview() {
         JetpackLearnTheme {
-            MyBodyContent()
+            ChipBodyContent()
         }
     }
 
