@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
-import androidx.constraintlayout.compose.layoutId
 import coil.compose.rememberImagePainter
 import com.mars.jetpacklearn.ui.theme.JetpackLearnTheme
 import kotlinx.coroutines.launch
@@ -42,7 +41,32 @@ class ComposeLayoutActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             JetpackLearnTheme {
-                DecoupledConstraintLayout()
+                TwoTexts("Hi", "there")
+            }
+        }
+    }
+
+    @Composable
+    fun TwoTexts(text1: String, text2: String) {
+        Surface() {
+            Row (modifier = Modifier.height(IntrinsicSize.Min)){
+                Text(
+                    text = text1, modifier = Modifier
+                        .weight(1f)
+                        .wrapContentWidth(Alignment.CenterHorizontally)
+                )
+                Divider(
+                    color = MaterialTheme.colors.primary,
+                    modifier = Modifier
+                        .width(1.dp)
+                        .fillMaxHeight()
+                )
+                Text(
+                    text = text2,
+                    modifier = Modifier
+                        .weight(1f)
+                        .wrapContentWidth(Alignment.CenterHorizontally)
+                )
             }
         }
     }
@@ -344,7 +368,7 @@ class ComposeLayoutActivity : ComponentActivity() {
     @Composable
     fun PhotographerCardPreview() {
         JetpackLearnTheme {
-            DecoupledConstraintLayout()
+            TwoTexts("Hi", "there")
         }
     }
 
